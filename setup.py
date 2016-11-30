@@ -15,7 +15,7 @@ setup(
     author_email="nunok7@gmail.com",
     description="Django application that implements a few backends for pinax-notifications",
     name="pinax-notifications-backends",
-    long_description=read("README.md"),
+    long_description=read("README.rst"),
     version="0.1",
     url="http://pinax-notifications.rtfd.org/",
     license="MIT",

@@ -1,4 +1,3 @@
-============================
 Pinax Notifications Backends
 ============================
 
@@ -30,15 +29,18 @@ Quick start
         ),
     ]
 
-3. Example on how to send a notification using push notifications
+3. Example on how to send a notification using push notifications::
+
     from pinax.notifications.models import send
     from django.contrib.auth import get_user_model
     user = get_user_model().objects.filter(email='test@example.com')
     extra_context = {"subject": "", "body": "", "aps": {"alert": {"body": "", "title": ""}}}
     send(user, "label", extra_context)
 
-4. Example on how to send a SMS using http://www.bulksms.com/
+4. Example on how to send a SMS using http://www.bulksms.com/::
+
     TODO
+
 
 
 
