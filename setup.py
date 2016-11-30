@@ -13,18 +13,26 @@ def read(*parts):
 setup(
     author="Nuno Khan",
     author_email="nunok7@gmail.com",
-    description="Django application that implements a few backends for pinax-notifications",
+    description=(
+        "Django application that implements a few backends for "
+        "pinax-notifications"
+    ),
     name="pinax-notifications-backends",
     long_description=read("README.rst"),
     version="0.1",
-    url="http://pinax-notifications.rtfd.org/",
+    url="https://github.com/psychok7/pinax-notifications-backends",
     license="MIT",
     packages=find_packages(),
     package_data={
         "notifications": []
     },
     install_requires=[
-        "pinax-notifications>=4.0.1"
+        "pinax-notifications>=4.0.0", "django-sendsms>=0.2.3",
+        "django-push-notifications>=1.4.1"
+    ],
+    dependency_links=[
+        'http://github.com/Ubiwhere/pinax-notifications/tarball/notice_model'
+        '#egg=pinax-notifications-4.0.0',
     ],
     test_suite="runtests.runtests",
     tests_require=[
