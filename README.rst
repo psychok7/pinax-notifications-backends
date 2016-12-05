@@ -1,11 +1,11 @@
 Pinax Notifications Backends
 ============================
 
-`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications`.
+`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (Using a more up to date fork https://github.com/Ubiwhere/pinax-notifications/tree/notice_model).
 
 Currently the backends that we support are for sending SMS's (https://github.com/stefanfoulis/django-sendsms) and Push Notifications (https://github.com/jleclanche/django-push-notifications)
 
-This application stores notices in the database, using a `Notice` model, so that the user can see a list of notices (a.k.a logs). This model has been taken from the old `django-notification`.
+The pinax-notifications fork that we are using stores notices in the database, using a `Notice` model, so that the user can see a list of notices (a.k.a logs). This model has been taken from the old `django-notification`.
 
 Quick start
 -----------
