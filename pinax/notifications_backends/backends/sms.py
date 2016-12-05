@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from pinax.notifications.utils import get_class_from_path
 from .base import BaseBackend
 from sendsms import api
@@ -10,9 +11,14 @@ except AttributeError:
     use_notice_model = None
 
 try:
-    mobile_phone_path = getattr(settings, 'PINAX_MOBILE_PHONE_PATH')
+    mobile_phone_path = getattr(settings, 'PINAX_SMS_MOBILE_PHONE_PATH')
 except AttributeError:
     mobile_phone_path = None
+
+try:
+    from_phone = getattr(settings, 'PINAX_SMS_DEFAULT_FROM_PHONE')
+except AttributeError:
+    raise ImproperlyConfigured('Please add a default FROM mobile number')
 
 
 class SmsBackend(BaseBackend):
@@ -43,9 +49,8 @@ class SmsBackend(BaseBackend):
             mobile_phone = getattr(userprofile, 'mobile_phone').split(',')
 
         if context.get('body'):
-            # from_phone is not important
             api.send_sms(
-                body=context['body'], from_phone='+41791111111', to=mobile_phone
+                body=context['body'], from_phone=from_phone, to=mobile_phone
             )
 
             if use_notice_model:
