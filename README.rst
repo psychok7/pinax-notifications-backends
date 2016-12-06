@@ -1,7 +1,7 @@
 Pinax Notifications Backends
 ============================
 
-`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (Using a more up to date fork https://github.com/Ubiwhere/pinax-notifications/tree/notice_model).
+`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (Using a more up to date pinax-notifications fork https://github.com/Ubiwhere/pinax-notifications/tree/notice_model).
 
 Currently the backends that we support are for sending SMS's (https://github.com/stefanfoulis/django-sendsms) and Push Notifications (https://github.com/jleclanche/django-push-notifications)
 
@@ -33,13 +33,26 @@ Quick start
 
     from pinax.notifications.models import send
     from django.contrib.auth import get_user_model
-    user = get_user_model().objects.filter(email='test@example.com')
+    users = get_user_model().objects.filter(email='test@example.com')
     extra_context = {"subject": "", "body": "", "aps": {"alert": {"body": "", "title": ""}}}
-    send(user, "label", extra_context)
+    send(users, "label", extra_context)
 
-4. Example on how to send a SMS using http://www.bulksms.com/::
+4. Example on how to send a SMS using "django-sendsms" http://www.bulksms.com/ (available only if this PR gets merged https://github.com/stefanfoulis/django-sendsms/pull/17)::
 
-    TODO
+    settings.py:
+        # Make sure you have "django-sendsms" properly configured
+        SENDSMS_BACKEND = 'sendsms.backends.bulksms.SmsBackend'
+        SENDSMS_BULKSMS_USERNAME = 'xxx'
+        SENDSMS_BULKSMS_PASSWORD = 'yyy'
+    
+        PINAX_SMS_DEFAULT_FROM_PHONE = '+41791111111'
+        # Optional
+        PINAX_SMS_MOBILE_PHONE_PATH = 'userprofile.mobile_phone'
+    
+    from pinax.notifications.models import send
+    from django.contrib.auth import get_user_model
+    users = get_user_model().objects.filter(email='test@example.com')
+    send(users, "label", extra_context={"body": "yyy"})
 
 
 
