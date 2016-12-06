@@ -1,11 +1,13 @@
 Pinax Notifications Backends
 ============================
 
-`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (Using a more up to date pinax-notifications fork https://github.com/Ubiwhere/pinax-notifications/tree/notice_model).
+`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (Using a more up to date pinax-notifications fork https://github.com/Ubiwhere/pinax-notifications/commit/88e209d7475761cc8ce0726f571d60a74c3970de) and it is based on https://github.com/jantoniomartin/condottieri_notification.
 
-Currently the backends that we support are for sending SMS's (https://github.com/stefanfoulis/django-sendsms) and Push Notifications (https://github.com/jleclanche/django-push-notifications)
+Currently the backends that we support are for sending SMS's (https://github.com/stefanfoulis/django-sendsms/pull/17) and Push Notifications (https://github.com/jleclanche/django-push-notifications)
 
-The pinax-notifications fork that we are using stores notices in the database, using a `Notice` model, so that the user can see a list of notices (a.k.a logs). This model has been taken from the old `django-notification`.
+The app also stores notices in the database, using a `Notice` model, so that the user can see a list of notices (a.k.a logs). This model has been taken from the old `django-notification`.
+
+Apart from that we also override the pinax-notifications `send()` function so now we are able to send notices in BULK if we desire.
 
 Quick start
 -----------
@@ -31,7 +33,7 @@ Quick start
 
 3. Example on how to send a notification using push notifications::
 
-    from pinax.notifications.models import send
+    from pinax.notifications_backends.models import send
     from django.contrib.auth import get_user_model
     users = get_user_model().objects.filter(email='test@example.com')
     extra_context = {"subject": "", "body": "", "aps": {"alert": {"body": "", "title": ""}}}
@@ -49,7 +51,7 @@ Quick start
         # Optional
         PINAX_SMS_MOBILE_PHONE_PATH = 'userprofile.mobile_phone'
     
-    from pinax.notifications.models import send
+    from pinax.notifications_backends.models import send
     from django.contrib.auth import get_user_model
     users = get_user_model().objects.filter(email='test@example.com')
     send(users, "label", extra_context={"body": "yyy"})
