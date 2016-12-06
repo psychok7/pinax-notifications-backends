@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from pinax.notifications.utils import get_class_from_path
+
 from .base import BaseBackend
+from core.utils import get_class_from_path
+
 from sendsms import api
 
 
@@ -55,7 +57,7 @@ class SmsBackend(BaseBackend):
 
             if use_notice_model:
                 Notice = get_class_from_path(
-                    path='pinax.notifications.models.Notice')
+                    path='pinax.notifications_backends.models.Notice')
 
                 # Based on http://stackoverflow.com/a/7390947
                 # This is mostly a log for sent notifications.
@@ -64,3 +66,36 @@ class SmsBackend(BaseBackend):
                     notice_type=notice_type, sender=sender,
                     medium='sms'
                 )
+
+    def deliver_bulk(self, recipients, sender, notice_type, extra_context):
+        context = self.default_context()
+        context['current_site'] = context['current_site'].domain
+        context.update(extra_context)
+
+        mobile_phones = []
+        for recipient in recipients:
+            if mobile_phone_path:
+                mobile_phone = getattr(recipient, mobile_phone_path)
+            else:
+                userprofile = getattr(recipient, 'userprofile')
+                mobile_phone = getattr(userprofile, 'mobile_phone')
+
+            mobile_phones.append(mobile_phone)
+
+        if context.get('body'):
+            api.send_sms(
+                body=context['body'], from_phone=from_phone, to=mobile_phones
+            )
+
+            if use_notice_model:
+                Notice = get_class_from_path(
+                    path='pinax.notifications_backends.models.Notice')
+
+                # Based on http://stackoverflow.com/a/7390947
+                # This is mostly a log for sent notifications.
+                for recipient in recipients:
+                    Notice.objects.create(
+                        recipient=recipient, message=context['body'],
+                        notice_type=notice_type, sender=sender,
+                        medium='sms'
+                    )
