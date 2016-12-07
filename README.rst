@@ -22,7 +22,7 @@ Quick start
 2. Then, add the following item to `settings.PINAX_NOTIFICATIONS_BACKENDS`::
 
     PINAX_NOTIFICATIONS_BACKENDS = [
-        ("email", "pinax.notifications.backends.email.EmailBackend"),
+        ("email", "pinax.notifications_backends.backends.email.CustomEmailBackend"),
         ("sms", "pinax.notifications_backends.backends.sms.SmsBackend"),
         (
             "push_notifications",
