@@ -51,14 +51,10 @@ class SmsBackend(BaseBackend):
         context.update(extra_context)
 
         messages = self.get_formatted_messages(
-            ("full.txt",), notice_type.label, context)
+            ("sms.txt",), notice_type.label, context)
 
-        context.update({
-            "message": messages["full.txt"]
-        })
         # A unicode message will be at most 70 characters per SMS message.
-        body = render_to_string(
-            "pinax/notifications/sms/body.txt", context)[:70].encode('utf-8')
+        body = messages["sms.txt"][:70].strip().encode('utf-8')
 
         if mobile_phone_path:
             mobile_phone = getattr(recipient, mobile_phone_path)
@@ -66,9 +62,7 @@ class SmsBackend(BaseBackend):
             userprofile = getattr(recipient, 'userprofile')
             mobile_phone = getattr(userprofile, 'mobile_phone').split(',')
 
-        api.send_sms(
-            body=body, from_phone=from_phone, to=mobile_phone
-        )
+        api.send_sms(body=body, from_phone=from_phone, to=mobile_phone)
 
         if use_notice_model:
             Notice = get_class_from_path(
@@ -92,14 +86,10 @@ class SmsBackend(BaseBackend):
         context.update(extra_context)
 
         messages = self.get_formatted_messages(
-            ("full.txt",), notice_type.label, context)
+            ("sms.txt",), notice_type.label, context)
 
-        context.update({
-            "message": messages["full.txt"]
-        })
         # A unicode message will be at most 70 characters per SMS message.
-        body = render_to_string(
-            "pinax/notifications/sms/body.txt", context)[:70].encode('utf-8')
+        body = messages["sms.txt"][:70].strip().encode('utf-8')
 
         mobile_phones = []
         for recipient in recipients:

@@ -38,88 +38,90 @@ class PushNotificationBackend(BaseBackend):
 
     def deliver(self, recipient, sender, notice_type, extra_context):
         print("Sending Push Notifications... ")
-        context = self.default_context()
-        context['current_site'] = context['current_site'].domain
-        if extra_context.get('aps'):
-            extra_context['aps'] = str(extra_context['aps']).encode("utf-8")
-
-        context.update(extra_context)
-
-        if context.get('subject') and context.get('body'):
-            context['message'] = (
-                context['subject'] + '\n\n' + context['body']
-            )
-
-            gcm_device = GCMDevice.objects.filter(user=recipient)
-            apns_device = APNSDevice.objects.filter(user=recipient)
-
-            if gcm_device:
-                try:
-                    gcm_device.first().send_message(None, extra=context)
-                except GCMError as e:
-                    print('GCMError "%s"', str(e))
-
-            if apns_device:
-                try:
-                    apns_device.first().send_message(None, extra=context)
-                except (APNSError, SSLError) as e:
-                    print('APNSError "%s"', str(e))
-
-            if use_notice_model:
-                Notice = get_class_from_path(
-                    path='pinax.notifications_backends.models.Notice')
-
-                # Based on http://stackoverflow.com/a/7390947
-                # This is mostly a log for sent notifications.
-                if context.get('message'):
-                    Notice.objects.create(
-                        recipient=recipient, message=context['message'],
-                        notice_type=notice_type, sender=sender,
-                        medium='push_notifications'
-                    )
+        raise NotImplementedError()
+        # context = self.default_context()
+        # context['current_site'] = context['current_site'].domain
+        # if extra_context.get('aps'):
+        #     extra_context['aps'] = str(extra_context['aps']).encode("utf-8")
+        #
+        # context.update(extra_context)
+        #
+        # if context.get('subject') and context.get('body'):
+        #     context['message'] = (
+        #         context['subject'] + '\n\n' + context['body']
+        #     )
+        #
+        #     gcm_device = GCMDevice.objects.filter(user=recipient)
+        #     apns_device = APNSDevice.objects.filter(user=recipient)
+        #
+        #     if gcm_device:
+        #         try:
+        #             gcm_device.first().send_message(None, extra=context)
+        #         except GCMError as e:
+        #             print('GCMError "%s"', str(e))
+        #
+        #     if apns_device:
+        #         try:
+        #             apns_device.first().send_message(None, extra=context)
+        #         except (APNSError, SSLError) as e:
+        #             print('APNSError "%s"', str(e))
+        #
+        #     if use_notice_model:
+        #         Notice = get_class_from_path(
+        #             path='pinax.notifications_backends.models.Notice')
+        #
+        #         # Based on http://stackoverflow.com/a/7390947
+        #         # This is mostly a log for sent notifications.
+        #         if context.get('message'):
+        #             Notice.objects.create(
+        #                 recipient=recipient, message=context['message'],
+        #                 notice_type=notice_type, sender=sender,
+        #                 medium='push_notifications'
+        #             )
 
     def deliver_bulk(self, recipients, sender, notice_type, extra_context):
         print("Sending Bulk Push Notifications... ")
-        context = self.default_context()
-        context['current_site'] = context['current_site'].domain
-        if extra_context.get('aps'):
-            extra_context['aps'] = str(extra_context['aps']).encode("utf-8")
-
-        context.update(extra_context)
-
-        if context.get('subject') and context.get('body'):
-            context['message'] = (
-                context['subject'] + '\n\n' + context['body']
-            )
-
-            gcm_device = GCMDevice.objects.filter(user=recipients)
-            apns_device = APNSDevice.objects.filter(user=recipients)
-
-            print ("gcm_device: ", gcm_device)
-            print("apns_device: ", apns_device)
-
-            if gcm_device:
-                try:
-                    gcm_device.first().send_message(None, extra=context)
-                except GCMError as e:
-                    print('GCMError "%s"', str(e))
-
-            if apns_device:
-                try:
-                    apns_device.first().send_message(None, extra=context)
-                except (APNSError, SSLError) as e:
-                    print('APNSError "%s"', str(e))
-
-            if use_notice_model:
-                Notice = get_class_from_path(
-                    path='pinax.notifications_backends.models.Notice')
-
-                # Based on http://stackoverflow.com/a/7390947
-                # This is mostly a log for sent notifications.
-                if context.get('message'):
-                    for recipient in recipients:
-                        Notice.objects.create(
-                            recipient=recipient, message=context['message'],
-                            notice_type=notice_type, sender=sender,
-                            medium='push_notifications'
-                        )
+        raise NotImplementedError()
+        # context = self.default_context()
+        # context['current_site'] = context['current_site'].domain
+        # if extra_context.get('aps'):
+        #     extra_context['aps'] = str(extra_context['aps']).encode("utf-8")
+        #
+        # context.update(extra_context)
+        #
+        # if context.get('subject') and context.get('body'):
+        #     context['message'] = (
+        #         context['subject'] + '\n\n' + context['body']
+        #     )
+        #
+        #     gcm_device = GCMDevice.objects.filter(user=recipients)
+        #     apns_device = APNSDevice.objects.filter(user=recipients)
+        #
+        #     print ("gcm_device: ", gcm_device)
+        #     print("apns_device: ", apns_device)
+        #
+        #     if gcm_device:
+        #         try:
+        #             gcm_device.first().send_message(None, extra=context)
+        #         except GCMError as e:
+        #             print('GCMError "%s"', str(e))
+        #
+        #     if apns_device:
+        #         try:
+        #             apns_device.first().send_message(None, extra=context)
+        #         except (APNSError, SSLError) as e:
+        #             print('APNSError "%s"', str(e))
+        #
+        #     if use_notice_model:
+        #         Notice = get_class_from_path(
+        #             path='pinax.notifications_backends.models.Notice')
+        #
+        #         # Based on http://stackoverflow.com/a/7390947
+        #         # This is mostly a log for sent notifications.
+        #         if context.get('message'):
+        #             for recipient in recipients:
+        #                 Notice.objects.create(
+        #                     recipient=recipient, message=context['message'],
+        #                     notice_type=notice_type, sender=sender,
+        #                     medium='push_notifications'
+        #                 )
