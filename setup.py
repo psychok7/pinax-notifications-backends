@@ -31,8 +31,10 @@ setup(
         "django-push-notifications>=1.4.1"
     ],
     dependency_links=[
-        'http://github.com/Ubiwhere/pinax-notifications/tarball/notice_model'
+        'http://github.com/Ubiwhere/pinax-notifications/tarball/medium_as_label'
         '#egg=pinax-notifications-4.0.0',
+        'http://github.com/psychok7/django-sendsms/tarball/added_bulksms_backend'
+        '#egg=django-sendsms-0.2.3',
     ],
     test_suite="runtests.runtests",
     tests_require=[

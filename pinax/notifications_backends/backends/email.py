@@ -14,6 +14,7 @@ except AttributeError:
 class CustomEmailBackend(EmailBackend):
 
     def deliver(self, recipient, sender, notice_type, extra_context):
+        print("Sending Email... ")
         super(
             CustomEmailBackend, self
         ).deliver(recipient, sender, notice_type, extra_context)

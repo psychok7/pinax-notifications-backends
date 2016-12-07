@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-
+from django.utils.translation import ugettext
+from django.template.loader import render_to_string
 from .base import BaseBackend
 from core.utils import get_class_from_path
 
@@ -40,9 +41,24 @@ class SmsBackend(BaseBackend):
         return False
 
     def deliver(self, recipient, sender, notice_type, extra_context):
+        print("Sending Sms... ")
         context = self.default_context()
-        context['current_site'] = context['current_site'].domain
+        context.update({
+            "sender": sender,
+            "notice": ugettext(notice_type.display),
+            "current_site": context['current_site'].domain
+        })
         context.update(extra_context)
+
+        messages = self.get_formatted_messages(
+            ("full.txt",), notice_type.label, context)
+
+        context.update({
+            "message": messages["full.txt"]
+        })
+        # A unicode message will be at most 70 characters per SMS message.
+        body = render_to_string(
+            "pinax/notifications/sms/body.txt", context)[:70].encode('utf-8')
 
         if mobile_phone_path:
             mobile_phone = getattr(recipient, mobile_phone_path)
@@ -50,27 +66,40 @@ class SmsBackend(BaseBackend):
             userprofile = getattr(recipient, 'userprofile')
             mobile_phone = getattr(userprofile, 'mobile_phone').split(',')
 
-        if context.get('body'):
-            api.send_sms(
-                body=context['body'], from_phone=from_phone, to=mobile_phone
+        api.send_sms(
+            body=body, from_phone=from_phone, to=mobile_phone
+        )
+
+        if use_notice_model:
+            Notice = get_class_from_path(
+                path='pinax.notifications_backends.models.Notice')
+
+            # Based on http://stackoverflow.com/a/7390947
+            # This is mostly a log for sent notifications.
+            Notice.objects.create(
+                recipient=recipient, message=body, notice_type=notice_type,
+                sender=sender, medium='sms'
             )
 
-            if use_notice_model:
-                Notice = get_class_from_path(
-                    path='pinax.notifications_backends.models.Notice')
-
-                # Based on http://stackoverflow.com/a/7390947
-                # This is mostly a log for sent notifications.
-                Notice.objects.create(
-                    recipient=recipient, message=context['body'],
-                    notice_type=notice_type, sender=sender,
-                    medium='sms'
-                )
-
     def deliver_bulk(self, recipients, sender, notice_type, extra_context):
+        print("Sending Bulk Sms... ")
         context = self.default_context()
-        context['current_site'] = context['current_site'].domain
+        context.update({
+            "sender": sender,
+            "notice": ugettext(notice_type.display),
+            "current_site": context['current_site'].domain
+        })
         context.update(extra_context)
+
+        messages = self.get_formatted_messages(
+            ("full.txt",), notice_type.label, context)
+
+        context.update({
+            "message": messages["full.txt"]
+        })
+        # A unicode message will be at most 70 characters per SMS message.
+        body = render_to_string(
+            "pinax/notifications/sms/body.txt", context)[:70].encode('utf-8')
 
         mobile_phones = []
         for recipient in recipients:
@@ -82,20 +111,16 @@ class SmsBackend(BaseBackend):
 
             mobile_phones.append(mobile_phone)
 
-        if context.get('body'):
-            api.send_sms(
-                body=context['body'], from_phone=from_phone, to=mobile_phones
-            )
+        api.send_sms(body=body, from_phone=from_phone, to=mobile_phones)
 
-            if use_notice_model:
-                Notice = get_class_from_path(
-                    path='pinax.notifications_backends.models.Notice')
+        if use_notice_model:
+            Notice = get_class_from_path(
+                path='pinax.notifications_backends.models.Notice')
 
-                # Based on http://stackoverflow.com/a/7390947
-                # This is mostly a log for sent notifications.
-                for recipient in recipients:
-                    Notice.objects.create(
-                        recipient=recipient, message=context['body'],
-                        notice_type=notice_type, sender=sender,
-                        medium='sms'
-                    )
+            # Based on http://stackoverflow.com/a/7390947
+            # This is mostly a log for sent notifications.
+            for recipient in recipients:
+                Notice.objects.create(
+                    recipient=recipient, message=body, notice_type=notice_type,
+                    sender=sender, medium='sms'
+                )

@@ -37,6 +37,7 @@ class PushNotificationBackend(BaseBackend):
         return False
 
     def deliver(self, recipient, sender, notice_type, extra_context):
+        print("Sending Push Notifications... ")
         context = self.default_context()
         context['current_site'] = context['current_site'].domain
         if extra_context.get('aps'):
@@ -78,6 +79,7 @@ class PushNotificationBackend(BaseBackend):
                     )
 
     def deliver_bulk(self, recipients, sender, notice_type, extra_context):
+        print("Sending Bulk Push Notifications... ")
         context = self.default_context()
         context['current_site'] = context['current_site'].domain
         if extra_context.get('aps'):
