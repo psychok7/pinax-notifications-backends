@@ -47,8 +47,7 @@ Quick start
     from pinax.notifications_backends.models import send
     from django.contrib.auth import get_user_model
     users = get_user_model().objects.filter(email='test@example.com')
-    extra_context = {"subject": "", "body": "", "aps": {"alert": {"body": "", "title": ""}}}
-    send(users, "label", extra_context)
+    send(users, "label")
 
 5. Example on how to send a SMS using "django-sendsms" http://www.bulksms.com/ (available only if this PR gets merged https://github.com/stefanfoulis/django-sendsms/pull/17)::
 
