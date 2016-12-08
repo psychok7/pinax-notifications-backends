@@ -1,25 +1,36 @@
 Pinax Notifications Backends
 ============================
 
-`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (Using a more up to date pinax-notifications fork https://github.com/Ubiwhere/pinax-notifications/commit/88e209d7475761cc8ce0726f571d60a74c3970de) and it is based on https://github.com/jantoniomartin/condottieri_notification.
+`pinax-notifications-backends` is a Django application that implements a few backends for `pinax-notifications` (https://github.com/pinax/pinax-notifications) and it is based on https://github.com/jantoniomartin/condottieri_notification.
 
-Currently the backends that we support are for sending SMS's (https://github.com/stefanfoulis/django-sendsms/pull/17) and Push Notifications (https://github.com/jleclanche/django-push-notifications)
+The backends that we support currently are for sending SMS's (https://github.com/stefanfoulis/django-sendsms/) and Push Notifications (https://github.com/jleclanche/django-push-notifications)
 
-The app also stores notices in the database, using a `Notice` model, so that the user can see a list of notices (a.k.a logs). This model has been taken from the old `django-notification`.
+The app also stores notices in the database, using a `Notice` model, so that the user can see a list of notices (a.k.a logs). This model idea has been taken from the old `django-notification`.
 
 Apart from that we also override the pinax-notifications `send()` function so now we are able to send notices in BULK if we desire.
+
+We are using forked versions of the mentioned packages, since we had to make a few changes/improvements. Make sure you install these dependencies first.
 
 Quick start
 -----------
 
-1. Add "pinax.notifications_backends" to your INSTALLED_APPS setting like this::
+1. Install the forked dependencies::
+
+    pip install git+https://github.com/Ubiwhere/pinax-notifications.git@88e209d7475761cc8ce0726f571d60a74c3970de
+    pip install git+https://github.com/psychok7/pinax-notifications-backends.git@7a8ba31e8c61e723f9e116ce626a2a4eef053353
+    
+    # Available backends:
+    pip install git+https://github.com/psychok7/django-sendsms.git@10f1d7a357d8f45e2954732e1b8933ee4590a51f
+    pip install django-push-notifications
+
+2. Add "pinax.notifications_backends" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
         ...
         'pinax.notifications_backends',
     ]
 
-2. Then, add the following item to `settings.PINAX_NOTIFICATIONS_BACKENDS`::
+3. Then, add the following item to `settings.PINAX_NOTIFICATIONS_BACKENDS`::
 
     PINAX_NOTIFICATIONS_BACKENDS = [
         ("email", "pinax.notifications_backends.backends.email.CustomEmailBackend"),
@@ -31,7 +42,7 @@ Quick start
         ),
     ]
 
-3. Example on how to send a notification using push notifications::
+4. Example on how to send a notification using push notifications::
 
     from pinax.notifications_backends.models import send
     from django.contrib.auth import get_user_model
@@ -39,7 +50,7 @@ Quick start
     extra_context = {"subject": "", "body": "", "aps": {"alert": {"body": "", "title": ""}}}
     send(users, "label", extra_context)
 
-4. Example on how to send a SMS using "django-sendsms" http://www.bulksms.com/ (available only if this PR gets merged https://github.com/stefanfoulis/django-sendsms/pull/17)::
+5. Example on how to send a SMS using "django-sendsms" http://www.bulksms.com/ (available only if this PR gets merged https://github.com/stefanfoulis/django-sendsms/pull/17)::
 
     settings.py:
         # Make sure you have "django-sendsms" properly configured
@@ -54,7 +65,7 @@ Quick start
     from pinax.notifications_backends.models import send
     from django.contrib.auth import get_user_model
     users = get_user_model().objects.filter(email='test@example.com')
-    send(users, "label", extra_context={"body": "yyy"})
+    send(users, "label")
 
 
 
