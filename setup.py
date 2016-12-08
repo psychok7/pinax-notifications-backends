@@ -23,10 +23,7 @@ setup(
     url="https://github.com/psychok7/pinax-notifications-backends",
     license="MIT",
     packages=find_packages(),
-    package_data={
-        "notifications": []
-    },
-    install_requires=[],
+    include_package_data=True,
     test_suite="runtests.runtests",
     tests_require=[
     ],
