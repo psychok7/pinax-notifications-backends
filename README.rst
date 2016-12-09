@@ -65,6 +65,9 @@ Quick start
     from django.contrib.auth import get_user_model
     users = get_user_model().objects.filter(email='test@example.com')
     send(users, "label")
+    # In case we need to send to a different number (works only for 1 recipient) instead of "PINAX_SMS_MOBILE_PHONE_PATH" we can:
+    extra_context = {'mobile_phone': '+41791111111'}
+    send(users, "label", extra_context=extra_context)
 
 
 

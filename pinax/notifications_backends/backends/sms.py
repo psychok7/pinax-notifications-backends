@@ -29,14 +29,7 @@ class SmsBackend(BaseBackend):
 
     def can_send(self, user, notice_type, scoping):
         can_send = super(SmsBackend, self).can_send(user, notice_type, scoping)
-
-        if mobile_phone_path is not None:
-            mobile_phone = getattr(user, mobile_phone_path)
-        else:
-            userprofile = getattr(user, 'userprofile')
-            mobile_phone = getattr(userprofile, 'mobile_phone')
-
-        if can_send and mobile_phone:
+        if can_send:
             return True
         return False
 
@@ -65,13 +58,17 @@ class SmsBackend(BaseBackend):
 
             mobile_phones = []
             for recipient in recipients:
-                if mobile_phone_path:
-                    mobile_phone = getattr(recipient, mobile_phone_path)
+                if context.get('mobile_phone') and len(recipients) == 1:
+                    # In case we need to override the default user phone number
+                    mobile_phones.append(context['mobile_phone'])
                 else:
-                    userprofile = getattr(recipient, 'userprofile')
-                    mobile_phone = getattr(userprofile, 'mobile_phone')
+                    if mobile_phone_path:
+                        mobile_phone = getattr(recipient, mobile_phone_path)
+                    else:
+                        userprofile = getattr(recipient, 'userprofile')
+                        mobile_phone = getattr(userprofile, 'mobile_phone')
 
-                mobile_phones.append(mobile_phone)
+                    mobile_phones.append(mobile_phone)
 
             api.send_sms(body=body, from_phone=from_phone, to=mobile_phones)
 
