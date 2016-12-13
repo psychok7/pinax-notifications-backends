@@ -22,6 +22,7 @@ Quick start
     # Available backends:
     pip install git+https://github.com/psychok7/django-sendsms.git@10f1d7a357d8f45e2954732e1b8933ee4590a51f
     pip install django-push-notifications
+    pip install django-mail-templated
 
 2. Add "pinax.notifications_backends" to your INSTALLED_APPS setting like this::
 
@@ -33,7 +34,8 @@ Quick start
 3. Then, add the following item to `settings.PINAX_NOTIFICATIONS_BACKENDS`::
 
     PINAX_NOTIFICATIONS_BACKENDS = [
-        ("email", "pinax.notifications_backends.backends.email.CustomEmailBackend"),
+        ("email", "pinax.notifications_backends.backends.email.HtmlEmailBackend"),
+        # ("email", "pinax.notifications_backends.backends.email.CustomEmailBackend"),
         ("sms", "pinax.notifications_backends.backends.sms.SmsBackend"),
         (
             "push_notifications",
