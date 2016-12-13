@@ -99,7 +99,9 @@ def send_now(users, label, extra_context=None, sender=None, scoping=None):
 
         for backend in settings.PINAX_NOTIFICATIONS_BACKENDS.values():
             if backend.can_send(user, notice_type, scoping=scoping):
-                if backend.__class__.__name__ != 'CustomEmailBackend':
+                backend_name = backend.__class__.__name__
+                if backend_name != 'CustomEmailBackend' and \
+                        backend_name != 'HtmlEmailBackend':
                     users_to_send[backend].append(user)
                 else:
                     # If the backend is the default email backend we want to
