@@ -39,8 +39,13 @@ class CustomEmailBackend(EmailBackend):
 
 
 class HtmlEmailBackend(EmailBackend):
+    """
+    Sending Html Email templates using:
+    https://github.com/artemrizhov/django-mail-templated
+    """
 
     def deliver(self, recipient, sender, notice_type, extra_context):
+        print("Sending HTML Email... ")
         context = self.default_context()
         context.update({
             "recipient": recipient,
@@ -48,9 +53,6 @@ class HtmlEmailBackend(EmailBackend):
             "notice": ugettext(notice_type.display),
         })
         context.update(extra_context)
-
-        # Added support for Html Email templates using:
-        # https://github.com/artemrizhov/django-mail-templated
 
         try:
             template = select_template(
@@ -61,7 +63,6 @@ class HtmlEmailBackend(EmailBackend):
                         notice_type.label, "html.email")
                 ]
             )
-
         except TemplateDoesNotExist:
             # We just ignore the backend if the template does not exist.
             pass
@@ -71,6 +72,17 @@ class HtmlEmailBackend(EmailBackend):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[recipient.email]
             )
+
+            if use_notice_model:
+                Notice = get_class_from_path(
+                    path='pinax.notifications_backends.models.Notice')
+
+                # Based on http://stackoverflow.com/a/7390947
+                # This is mostly a log for sent notifications.
+                Notice.objects.create(
+                    recipient=recipient, message=notice_type.description,
+                    notice_type=notice_type, sender=sender, medium='email'
+                )
 
     def deliver_bulk(self, recipients, sender, notice_type, extra_context):
         raise NotImplementedError()

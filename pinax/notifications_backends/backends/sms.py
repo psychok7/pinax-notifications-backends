@@ -37,6 +37,10 @@ class SmsBackend(BaseBackend):
         raise NotImplementedError()
 
     def deliver_bulk(self, recipients, sender, notice_type, extra_context):
+        """
+        Sending SMS using:
+        https://github.com/stefanfoulis/django-sendsms/
+        """
         print("Sending Bulk Sms... ")
         context = self.default_context()
         context.update({

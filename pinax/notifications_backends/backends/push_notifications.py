@@ -42,6 +42,10 @@ class PushNotificationBackend(BaseBackend):
         raise NotImplementedError()
 
     def deliver_bulk(self, recipients, sender, notice_type, extra_context):
+        """
+        Sending GCM and APNs Push notifications using:
+        https://github.com/jleclanche/django-push-notifications
+        """
         print("Sending Bulk Push Notifications... ")
         context = self.default_context()
         context.update({
