@@ -20,7 +20,7 @@ Quick start
     pip install git+https://github.com/psychok7/pinax-notifications-backends.git@7a8ba31e8c61e723f9e116ce626a2a4eef053353
     
     # Available backends:
-    pip install git+https://github.com/psychok7/django-sendsms.git@10f1d7a357d8f45e2954732e1b8933ee4590a51f
+    pip install git+https://github.com/psychok7/django-sendsms.git@2bf4c20a6de8130e6cbcd1f651f619b638a498c3
     pip install django-push-notifications
     pip install django-mail-templated
 

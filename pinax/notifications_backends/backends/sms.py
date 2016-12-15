@@ -57,8 +57,7 @@ class SmsBackend(BaseBackend):
             # We just ignore the backend if the template does not exist.
             pass
         else:
-            # A unicode message will be at most 70 characters per SMS message.
-            body = messages["sms.txt"][:70].strip().encode('utf-8')
+            body = messages["sms.txt"].strip().encode('utf-8')
 
             mobile_phones = []
             for recipient in recipients:
