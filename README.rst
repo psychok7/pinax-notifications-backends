@@ -17,7 +17,7 @@ Quick start
 1. Install the forked dependencies::
 
     pip install git+https://github.com/Ubiwhere/pinax-notifications.git@88e209d7475761cc8ce0726f571d60a74c3970de
-    pip install git+https://github.com/psychok7/pinax-notifications-backends.git@7a8ba31e8c61e723f9e116ce626a2a4eef053353
+    pip install git+https://github.com/psychok7/pinax-notifications-backends.git@3f6871d24658c6a7ea7de47590d696bba8caaafb
     
     # Available backends:
     pip install git+https://github.com/psychok7/django-sendsms.git@2bf4c20a6de8130e6cbcd1f651f619b638a498c3
