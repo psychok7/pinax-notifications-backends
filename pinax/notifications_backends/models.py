@@ -109,8 +109,13 @@ def send_now(users, label, extra_context=None, sender=None, scoping=None):
                     backend.deliver(user, sender, notice_type, extra_context)
                     sent = True
 
-    for backend, users in users_to_send.iteritems():
-        backend.deliver_bulk(users, sender, notice_type, extra_context)
+    try:
+        for backend, users in users_to_send.iteritems():
+            backend.deliver_bulk(users, sender, notice_type, extra_context)
+    except AttributeError:
+        # Becomes .items() in py3k
+        for backend, users in users_to_send.items():
+            backend.deliver_bulk(users, sender, notice_type, extra_context)
 
     if users_to_send:
         sent = True
